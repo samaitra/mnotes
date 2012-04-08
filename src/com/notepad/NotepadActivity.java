@@ -22,7 +22,7 @@ public class NotepadActivity extends ListActivity{
     private static final int ACTIVITY_CREATE=0;
     private static final int ACTIVITY_EDIT=1;
     private static final int DELETE_ID = Menu.FIRST + 1;
-	private Cursor mNotesCursor;
+	//private Cursor mNotesCursor;
 	    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,37 +99,15 @@ public class NotepadActivity extends ListActivity{
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
     	super.onListItemClick(l, v, position, id);
-    	Cursor c = mNotesCursor;
-    	c.moveToPosition(position);
+    	
     	Intent i = new Intent(this, NoteEdit.class);
     	i.putExtra(NotesDbHelper.KEY_ROWID, id);
-    	i.putExtra(NotesDbHelper.KEY_TITLE, c.getString(
-    	        c.getColumnIndexOrThrow(NotesDbHelper.KEY_TITLE)));
-    	i.putExtra(NotesDbHelper.KEY_BODY, c.getString(
-    	        c.getColumnIndexOrThrow(NotesDbHelper.KEY_BODY)));
     	startActivityForResult(i, ACTIVITY_EDIT);
     }
     
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
-    	super.onActivityResult(requestCode, resultCode, intent);
-    	Bundle extras = intent.getExtras();
-
-    	switch(requestCode) {
-    	case ACTIVITY_CREATE:
-    	    String title = extras.getString(NotesDbHelper.KEY_TITLE);
-    	    String body = extras.getString(NotesDbHelper.KEY_BODY);
-    	    mDbHelper.createNote(title, body);
-    	    fillData();
-    	    break;
-    	case ACTIVITY_EDIT:
-    	    Long mRowId = extras.getLong(NotesDbHelper.KEY_ROWID);
-    	    if (mRowId != null) {
-    	        String editTitle = extras.getString(NotesDbHelper.KEY_TITLE);
-    	        String editBody = extras.getString(NotesDbHelper.KEY_BODY);
-    	        mDbHelper.updateNote(mRowId, editTitle, editBody);
-    	    }
-    	    fillData();
-    	    break;
-    	}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        fillData();
     }
 }
